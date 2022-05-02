@@ -1,0 +1,1 @@
+export const pizzaRed = '#FB1919'

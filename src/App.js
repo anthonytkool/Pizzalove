@@ -1,6 +1,7 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
 import { Navbar } from './Navbar/Navbar'
+import { Banner } from './Banner/Banner'
 
 const GlobayStyle = createGlobalStyle`
 body{
@@ -17,6 +18,7 @@ function App() {
     <>
       <GlobayStyle />
       <Navbar />
+      <Banner />
     </>
   )
 }
