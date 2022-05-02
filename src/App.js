@@ -1,8 +1,10 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
+import { Navbar } from './Navbar/Navbar'
 
 const GlobayStyle = createGlobalStyle`
 body{
+  margin: 0;
   font-family: 'Radio Canada', sans-serif;
 }
 h1, h2, h3 {
@@ -14,8 +16,7 @@ function App() {
   return (
     <>
       <GlobayStyle />
-      <h1>Pizza Love</h1>
-      <p>Hello! Pizza Loverr</p>
+      <Navbar />
     </>
   )
 }
