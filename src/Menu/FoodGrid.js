@@ -12,7 +12,7 @@ export const FoodLabel = styled(Title)`
   padding: 5px;
 `
 
-export const Food = styled(Title)`
+export const Food = styled.div`
   height: 150px;
   padding: 10px;
   color: #f8fb01;
