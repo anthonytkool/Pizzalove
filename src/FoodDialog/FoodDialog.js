@@ -4,6 +4,8 @@ import { FoodLabel } from '../Menu/FoodGrid'
 import { pizzaRed } from '../Styles/Colors'
 import { Title } from '../Styles/Title'
 import { formatPrice } from '../Data/FoodData'
+import { QuantityInput } from './QuantityInput'
+import { useQuantity } from '../Hooks/useQuantity'
 
 const Dialog = styled.div`
   width: 500px;
@@ -19,6 +21,7 @@ const Dialog = styled.div`
 export const DialogContent = styled.div`
   min-height: 100px;
   overflow: auto;
+  padding: 0px 40px;
 `
 export const DialogFooter = styled.div`
   box-shadow: 0px -2px 10px 0px grey;
@@ -60,35 +63,52 @@ const DialogBannerName = styled(FoodLabel)`
   font-size: 20px;
   padding: 5px 40px;
 `
+ export const getPrice = (order) => {
+  return order.quantity * order.price
+}
 
-export const FoodDialog = ({ openFood, setOpenFood, setOrders, orders }) => {
+export const FoodDialogContainer = ({
+  openFood,
+  setOpenFood,
+  setOrders,
+  orders,
+}) => {
+  const quantity = useQuantity(openFood && openFood.quantity)
+
   function close() {
     setOpenFood()
   }
-  if (!openFood) {
-    return null
+  const order = { 
+    ...openFood,
+    quantity: quantity.value 
   }
-  const order = { ...openFood }
 
   const addToOrder = () => {
     setOrders([...orders, order])
     close()
   }
 
-  return openFood ? (
+  return (
     <>
       <DialogShadow onClick={close} />
       <Dialog>
         <DialogBanner img={openFood.img}>
           <DialogBannerName>{openFood.name}</DialogBannerName>
         </DialogBanner>
-        <DialogContent></DialogContent>
+        <DialogContent>
+          <QuantityInput quantity={quantity} />
+        </DialogContent>
         <DialogFooter>
           <ConfirmButton onClick={addToOrder}>
-            ADD To Order : {formatPrice(openFood.price)}
+            ADD To Order : {formatPrice(getPrice(order))}
           </ConfirmButton>
         </DialogFooter>
       </Dialog>
     </>
-  ) : null
+  )
+}
+
+export const FoodDialog = (props) => {
+  if (!props.openFood) return null
+  return <FoodDialogContainer {...props} />
 }
