@@ -6,6 +6,8 @@ import { Title } from '../Styles/Title'
 import { formatPrice } from '../Data/FoodData'
 import { QuantityInput } from './QuantityInput'
 import { useQuantity } from '../Hooks/useQuantity'
+import { Toppings } from './Toppings'
+import { useTopping } from '../Hooks/useTopping'
 
 const Dialog = styled.div`
   width: 500px;
@@ -22,6 +24,7 @@ export const DialogContent = styled.div`
   min-height: 100px;
   overflow: auto;
   padding: 0px 40px;
+  padding-bottom: 80px;
 `
 export const DialogFooter = styled.div`
   box-shadow: 0px -2px 10px 0px grey;
@@ -63,8 +66,12 @@ const DialogBannerName = styled(FoodLabel)`
   font-size: 20px;
   padding: 5px 40px;
 `
- export const getPrice = (order) => {
-  return order.quantity * order.price
+const pricePerTopping = 0.50;
+export const getPrice = (order) => {
+  return order.quantity * (order.price + order.toppings.filter(t => t.checked).length * pricePerTopping)
+}
+const hasTopping = (food) => {
+  return food.section === 'Pizza'
 }
 
 export const FoodDialogContainer = ({
@@ -74,13 +81,14 @@ export const FoodDialogContainer = ({
   orders,
 }) => {
   const quantity = useQuantity(openFood && openFood.quantity)
-
+  const topping = useTopping(openFood.toppings)
   function close() {
     setOpenFood()
   }
-  const order = { 
+  const order = {
     ...openFood,
-    quantity: quantity.value 
+    quantity: quantity.value,
+    toppings: topping.toppings,
   }
 
   const addToOrder = () => {
@@ -97,6 +105,12 @@ export const FoodDialogContainer = ({
         </DialogBanner>
         <DialogContent>
           <QuantityInput quantity={quantity} />
+          {hasTopping(openFood) && (
+            <>
+              <h3>Would you like topping?</h3>
+              <Toppings {...topping} />
+            </>
+          )}
         </DialogContent>
         <DialogFooter>
           <ConfirmButton onClick={addToOrder}>
